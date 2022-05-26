@@ -15,13 +15,33 @@ type event struct {
 	Description string `json:"Description"`
 }
 
+type task struct{
+	ID          string `json:"ID"`
+	Name string		`json:"name"`
+	Content string	`json:"content"`
+
+}
+
 type allEvents []event
+type allTasks []task
 
 var events = allEvents{
 	{
 		ID:          "1",
 		Title:       "Introduction to Golang",
 		Description: "Come join us for a chance to learn how golang works and get to eventually try it out",
+	},
+}
+var tasks = allTasks{
+	{
+		ID : "111",
+		Name: "Task One",
+		Content: "some content",
+	},
+	{
+		ID : "222",
+		Name: "Task Two",
+		Content: "some content",
 	},
 }
 
@@ -87,12 +107,17 @@ func getAllEvents(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(events)
 }
 
+func getTasks(w http.ResponseWriter, r *http.Request)  { //Ruta que permite obtener todas las tareas
+	json.NewEncoder(w).Encode(tasks)					//Si se visita el localhost/tasks, se podra ver las tareas que se tengan
+}
+
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/event", createEvent).Methods("POST")
 	router.HandleFunc("/events", getAllEvents).Methods("GET")
+	router.HandleFunc("/tasks", getTasks).Methods("GET")
 	router.HandleFunc("/events/{id}", getOneEvent).Methods("GET")
 	router.HandleFunc("/events/{id}", updateEvent).Methods("PUT")
 	router.HandleFunc("/events/{id}", deleteEvent).Methods("DELETE")
